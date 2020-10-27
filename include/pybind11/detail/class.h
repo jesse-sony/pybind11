@@ -642,7 +642,8 @@ inline PyObject* make_new_python_type(const type_record &rec) {
     auto &internals = get_internals();
     auto bases = tuple(rec.bases);
     auto base = (bases.empty()) ? (rec.is_except ? internals.exception_base
-                                                 : internals.instance_base)
+                                               : internals.instance_base)
+                                : bases[0].ptr();
 
     /* Danger zone: from now (and until PyType_Ready), make sure to
        issue no Python C API calls which could potentially invoke the
