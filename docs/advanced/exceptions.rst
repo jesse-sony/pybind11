@@ -176,7 +176,7 @@ section.
     previously-declared existing exception translators.
 
 Local vs Global Exception Translators
-==============================
+=====================================
 
 Similar to how the ``py::module_local`` flag allows uesrs to limit a bound class
 to a single compiled module to prevent name collisions. When a global exception
