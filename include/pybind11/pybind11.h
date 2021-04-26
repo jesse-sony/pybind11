@@ -833,7 +833,7 @@ protected:
 
             auto last_exception = std::current_exception();
 
-            auto & registered_local_exception_translators = get_module_internals().registered_local_exception_translators;
+            auto & registered_local_exception_translators = get_local_internals().registered_local_exception_translators;
             for (auto& translator : registered_local_exception_translators) {
                 try {
                     translator(last_exception);
@@ -1127,7 +1127,7 @@ protected:
         auto tindex = std::type_index(*rec.type);
         tinfo->direct_conversions = &internals.direct_conversions[tindex];
         if (rec.module_local)
-            get_registered_local_types_cpp()[tindex] = tinfo;
+            get_local_internals().registered_local_types_cpp[tindex] = tinfo;
         else
             internals.registered_types_cpp[tindex] = tinfo;
         internals.registered_types_py[(PyTypeObject *) m_ptr] = { tinfo };
@@ -1313,7 +1313,7 @@ public:
         generic_type::initialize(record);
 
         if (has_alias) {
-            auto &instances = record.module_local ? get_registered_local_types_cpp() : get_internals().registered_types_cpp;
+            auto &instances = record.module_local ? get_local_internals().registered_local_types_cpp : get_internals().registered_types_cpp;
             instances[std::type_index(typeid(type_alias))] = instances[std::type_index(typeid(type))];
         }
     }
@@ -2019,7 +2019,7 @@ void register_exception_translator(ExceptionTranslator&& translator) {
   */
 template <typename ExceptionTranslator>
 void register_local_exception_translator(ExceptionTranslator&& translator) {
-    detail::get_module_internals().registered_local_exception_translators.push_front(
+    detail::get_local_internals().registered_local_exception_translators.push_front(
         std::forward<ExceptionTranslator>(translator));
 }
 
